@@ -1,0 +1,15 @@
+import codecademylib3
+import pandas as pd
+
+orders = pd.read_csv('shoefly.csv')
+print(orders.head())
+
+mylambda = lambda x: 'vegan' if x != 'leather' else 'animal'
+
+orders['shoe_source'] = orders.shoe_material.apply(mylambda)
+
+hola = lambda row: 'Dear Mr. {}'.format(row.last_name) if row.gender == 'male' else 'Dear Ms. {}'.format(row.last_name)
+
+orders['salutation'] = orders.apply(hola, axis=1)
+
+print(orders)
