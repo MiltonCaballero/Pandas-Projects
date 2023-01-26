@@ -1,0 +1,40 @@
+import codecademylib3
+import pandas as pd
+
+ad_clicks = pd.read_csv('ad_clicks.csv')
+print(ad_clicks.head())
+num_views = ad_clicks.groupby('utm_source').user_id.count().reset_index()
+max_views = num_views.user_id.max()
+print(num_views)
+print(max_views)
+
+ad_clicks['is_click'] = ~ad_clicks.ad_click_timestamp.isnull()
+print(ad_clicks)
+
+clicks_by_source = ad_clicks.groupby(['utm_source', 'is_click']).user_id.count().reset_index()
+clicks_pivot = clicks_by_source.pivot(
+  columns='is_click',
+  index='utm_source',
+  values='user_id'
+).reset_index()
+print(clicks_pivot)
+clicks_pivot['percent_clicked'] = clicks_pivot[True] / (clicks_pivot[False] + clicks_pivot[True]) * 100
+print(clicks_pivot)
+
+count_ab = ad_clicks.groupby('experimental_group').user_id.count().reset_index()
+print(count_ab)
+
+per_ab = ad_clicks.groupby(['experimental_group','is_click']).user_id.count().reset_index()
+print(per_ab)
+
+a_clicks = ad_clicks[ad_clicks.experimental_group == 'A']
+b_clicks = ad_clicks[ad_clicks.experimental_group == 'B']
+
+per_a = a_clicks.groupby(['day','is_click']).user_id.count().reset_index()
+per_a['Percentage per day'] = per_a.user_id / a_clicks.user_id.count() * 100
+per_a = per_a[per_a.is_click == True].reset_index()
+print(per_a)
+per_b = b_clicks.groupby(['day','is_click']).user_id.count().reset_index()
+per_b['Percentage per day'] = per_b.user_id / b_clicks.user_id.count() * 100
+per_b = per_b[per_b.is_click == True].reset_index()
+print(per_b)
