@@ -1,0 +1,33 @@
+# import libraries
+import codecademylib3
+import pandas as pd
+import numpy as np
+from scipy.stats import ttest_1samp
+from scipy.stats import binom_test
+
+# load data
+heart = pd.read_csv('heart_disease.csv')
+yes_hd = heart[heart.heart_disease == 'presence']
+no_hd = heart[heart.heart_disease == 'absence']
+
+chol_hd = yes_hd.chol
+print(np.mean(chol_hd))
+nochol_hd = no_hd.chol
+
+tstat,pval = ttest_1samp(chol_hd,240)
+print(pval)
+
+tstat,pval = ttest_1samp(nochol_hd,240)
+print(pval)
+
+num_patients = len(heart)
+print(num_patients)
+num_highfbs_patients = np.sum(heart.fbs == 1)
+print(num_highfbs_patients)
+
+ex_dia = 0.08*len(heart)
+print(ex_dia)
+
+p_value = binom_test(45,303,0.08,alternative='greater')
+print(p_value)
+
