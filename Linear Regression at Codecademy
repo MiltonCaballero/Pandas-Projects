@@ -1,0 +1,81 @@
+# Load libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import codecademylib3
+
+# Read in the data
+codecademy = pd.read_csv('codecademy.csv')
+
+# Print the first five rows
+print(codecademy.head())
+# Create a scatter plot of score vs completed
+plt.scatter(codecademy.completed,codecademy.score)
+
+# Show then clear plot
+plt.show()
+plt.clf()
+
+# Fit a linear regression to predict score based on prior lessons completed
+model = sm.OLS.from_formula('score~completed',data=codecademy)
+results = model.fit()
+print(results.params)
+
+# Intercept interpretation:
+
+# Slope interpretation:
+
+# Plot the scatter plot with the line on top
+plt.scatter(codecademy.completed,codecademy.score)
+plt.plot(codecademy.completed, results.predict())
+
+# Show then clear plot
+plt.show()
+plt.clf()
+
+# Predict score for learner who has completed 20 prior lessons
+newdata = {'completed':[20]}
+pred = results.predict(newdata)
+print(pred)
+
+# Calculate fitted values
+fitted_values = results.predict(codecademy)
+
+# Calculate residuals
+residuals = codecademy.score - fitted_values
+
+# Check normality assumption
+plt.hist(residuals)
+
+# Show then clear the plot
+plt.show()
+plt.clf()
+
+# Check homoscedasticity assumption
+plt.scatter(fitted_values,residuals)
+
+# Show then clear the plot
+plt.show()
+plt.clf()
+
+# Create a boxplot of score vs lesson
+sns.boxplot(codecademy.lesson,codecademy.score)
+
+# Show then clear plot
+plt.show()
+plt.clf()
+
+# Fit a linear regression to predict score based on which lesson they took
+model_2 = sm.OLS.from_formula('score~lesson',data=codecademy)
+results_2 = model_2.fit()
+print(results_2.params)
+
+# Calculate and print the group means and mean difference (for comparison)
+print(np.mean(codecademy.score[codecademy.lesson== 'Lesson A']))
+print(np.mean(codecademy.score[codecademy.lesson== 'Lesson B']))
+
+# Use `sns.lmplot()` to plot `score` vs. `completed` colored by `lesson`
+sns.lmplot(x = 'completed', y = 'score', hue = 'lesson', data = codecademy)
+plt.show()
