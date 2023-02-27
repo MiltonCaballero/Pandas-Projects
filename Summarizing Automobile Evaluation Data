@@ -1,0 +1,25 @@
+import pandas as pd
+import numpy as np
+
+cars = pd.read_csv('car_eval_dataset.csv')
+# print(cars.head())
+
+print(cars['manufacturer_country'].value_counts())
+print(cars['manufacturer_country'].value_counts().index[3])
+
+print(cars['manufacturer_country'].value_counts(normalize=True))
+
+print(cars['buying_cost'].unique())
+
+buying_cost_categories = ['low','med','high','vhigh']
+
+cars['buying_cost'] = pd.Categorical(cars['buying_cost'],buying_cost_categories,ordered=True)
+index = np.median(cars['buying_cost'].cat.codes)
+print(index)
+print(buying_cost_categories[int(index)])
+
+print(cars.luggage.value_counts())
+print(cars.luggage.value_counts(dropna=False,normalize=True))
+
+print((cars.doors == '5more').sum())
+print((cars.doors == '5more').mean())
